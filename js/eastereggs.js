@@ -1,10 +1,3 @@
-let clickCount=0;
-gremlins.forEach(g=>{
-  g.addEventListener('click',()=>{
-    clickCount++;
-    if(clickCount>=10){
-      triggerStageEvent('💥 DRAMATIC ERROR: Secret Boot Appears! 💥');
-      clickCount=0;
-    }
-  });
+document.getElementById('test-btn').addEventListener('click',()=>{
+  triggerStageEvent('🛠 Test Feature: spinning debug info...');
 });
