@@ -3,12 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini-Game: Boot Dodge</title>
+<title>Mini-Game: Dodge Boots</title>
 <link rel="stylesheet" href="css/style.css">
+<style>
+  #gameCanvas{background:#222; display:block; margin:0 auto; border:2px solid #fff;}
+</style>
 </head>
 <body>
-<h1>Mini-Game: Boot Dodge!</h1>
-<p>Use your finger or mouse to dodge hopping gremlins!</p>
+<h1>Dodge the Boots!</h1>
+<canvas id="gameCanvas" width="300" height="400"></canvas>
 <a href="index.html" class="button">Back to Game Show</a>
+<script>
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+let player={x:140,y:350,w:20,h:20};
+let boots=[];
+let gameOver=false;
+document.addEventListener('mousemove',e=>{ const rect=canvas.getBoundingClientRect();
+player.x=e.clientX-rect.left-10; });
+function spawnBoot(){ boots.push({x:Math.random()*280,y:0,w:20,h:20}); }
+function update(){
+  ctx.clearRect(0,0,300,400);
+  ctx.fillStyle='cyan'; ctx.fillRect(player.x,player.y,player.w,player.h);
+  ctx.fillStyle='orange';
+  boots.forEach(b=>{
+    b.y+=3;
+    ctx.fillRect(b.x,b.y,b.w,b.h);
+    if(b.y+b.h>player.y && b.x+ b.w>player.x && b.x<player.x+player.w){ gameOver=true;}
+  });
+  boots=boots.filter(b=>b.y<400);
+  if(!gameOver) requestAnimationFrame(update);
+  else{ ctx.fillStyle='red'; ctx.font='20px Arial'; ctx.fillText('GAME OVER',70,200);}
+}
+setInterval(spawnBoot,800);
+update();
+</script>
 </body>
 </html>
