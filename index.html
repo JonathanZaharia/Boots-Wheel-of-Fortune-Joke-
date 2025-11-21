@@ -1,49 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthday Boot Game Show</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/animations.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Boot Debt Spin Wheel</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --card:#0f1724;
+    --accent:#ffd166;
+    --muted:#94a3b8;
+  }
+  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071026 0%, #071428 100%);color:#e6eef8;display:flex;align-items:center;justify-content:center;padding:28px;}
+  .wrap{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:20px;box-shadow:0 8px 30px rgba(2,6,23,0.7);}
+  header{display:flex;gap:12px;align-items:center;margin-bottom:14px;}
+  header h1{margin:0;font-size:18px;}
+  .top{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+  #canvasWrap{flex:0 1 420px;display:flex;flex-direction:column;align-items:center;}
+  canvas{background:transparent;border-radius:8px;display:block;}
+  #spinBtn{margin-top:12px;padding:10px 18px;border-radius:8px;border:0;background:var(--accent);color:#091322;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(255,209,102,0.16);}
+  #spinBtn:active{transform:translateY(1px);}
+  .right{flex:1;min-width:250px;}
+  .metadata{color:var(--muted);font-size:13px;margin-bottom:10px;}
+  .optionsList{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px;}
+  .opt{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;display:flex;gap:8px;align-items:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);transition:transform .12s}
+  .opt:hover{transform:translateY(-3px)}
+  .opt img{width:48px;height:48px;object-fit:cover;border-radius:6px;}
+  .opt .meta{display:flex;flex-direction:column;font-size:13px}
+  .label{font-weight:700}
+  .price{color:var(--muted);font-size:12px}
+  footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:center}
+  @media(max-width:720px){ .top{flex-direction:column;align-items:center} #canvasWrap{width:100%} .right{width:100%}}
+</style>
 </head>
 <body>
+  <div class="wrap" role="application" aria-label="Boot Debt Spin Wheel">
+    <header>
+      <h1>Boot Debt Spin Wheel — Brother Owes You</h1>
+      <div style="margin-left:auto;color:var(--muted);font-size:13px">Save as <code>boot-debt-wheel.html</code> → open in browser</div>
+    </header>
 
-<header>
-  <h1>🎉 Birthday Boot Game Show 🎉</h1>
-  <p>"Hey, you’re taking your sweet time on my gift, so I made a gameshow!"</p>
-</header>
+    <div class="top">
+      <div id="canvasWrap">
+        <canvas id="wheel" width="420" height="420" aria-label="Spin wheel"></canvas>
+        <button id="spinBtn">SPIN THE WHEEL</button>
+      </div>
 
-<div id="wheel-container">
-  <canvas id="wheel-canvas"></canvas>
-</div>
+      <div class="right">
+        <div class="metadata">When the wheel stops, the buy link will open in a new tab. You can edit options in the <code>options</code> array inside the file.</div>
 
-<div id="boot-options">
-  <h2>Boot Options</h2>
-  <ul id="boot-list"></ul>
-</div>
+        <div id="optionsContainer" class="optionsList" aria-live="polite"></div>
+      </div>
+    </div>
 
-<div id="stage-panel"></div>
-
-<div id="winner-popup" class="popup">
-  <div class="popup-content">
-    <p id="winner-text"></p>
-    <a id="winner-link" href="#" target="_blank">View Boot</a>
-    <button id="popup-close">Close</button>
+    <footer>Made for a prank — replace the sample items with your real boot links & images.</footer>
   </div>
-</div>
 
-<div id="controls">
-  <button id="spin-btn">SPIN THE WHEEL!</button>
-  <a href="minigame.html" class="button">Sign the “Legal Contract”</a>
-  <button id="test-btn">Test Feature</button>
-</div>
+<script>
+/*
+  HOW TO EDIT:
+  - Replace the entries in the `options` array below.
+  - Each entry: { label, price, img, url }
+  - img should be a publicly reachable URL (or data URI).
+  - url is the buy link that will open when the wheel stops.
+*/
 
-<div class="gremlin" id="gremlin1"></div>
+// === SAMPLE OPTIONS — edit these ===
+const options = [
+  { label: "Jim Green African Ranger", price: "$179", img: "https://i.imgur.com/1Q9Z1Zb.jpg", url: "https://example.com/boot1" },
+  { label: "Comfy Comp Toe Boot - AR", price: "$199", img: "https://i.imgur.com/8Km9tLL.jpg", url: "https://example.com/boot2" },
+  { label: "Budget Work Boot (sus)", price: "$89", img: "https://i.imgur.com/Y3g2K7W.jpg", url: "https://example.com/boot3" },
+  { label: "Premium 2TB NVME Tribute", price: "$249", img: "https://i.imgur.com/ZXBtVw7.jpg", url: "https://example.com/boot4" },
+  { label: "Fudge Special Edition", price: "$129", img: "https://i.imgur.com/7FqT2q2.jpg", url: "https://example.com/boot5" },
+  { label: "Numzaan's Choice", price: "$159", img: "https://i.imgur.com/J5LVHEL.jpg", url: "https://example.com/boot6" },
+  { label: "Brother's Mercy Boot", price: "$99", img: "https://i.imgur.com/v1X6vxK.jpg", url: "https://example.com/boot7" },
+  { label: "The 'You Owe Me' Comp Toe", price: "$179", img: "https://i.imgur.com/RGq0N0x.jpg", url: "https://example.com/boot8" }
+];
+// === end sample options ===
 
-<script src="js/wheel.js"></script>
-<script src="js/characters.js"></script>
-<script src="js/stageshow.js"></script>
-<script src="js/eastereggs.js"></script>
+/* --- DO NOT TOUCH BELOW UNLESS YOU KNOW JS --- */
+
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const cx = canvas.width/2, cy = canvas.height/2;
+const outerR = Math.min(cx, cy) - 8;
+const innerR = 44;
+let angle = 0;
+let angularVelocity = 0;
+let spinning = false;
+const friction = 0.995;
+const textRadius = (outerR + innerR)/2;
+const colors = [
+  "#e05d5d","#f0a76b","#f6e07a","#9be28b","#6fd4d2","#86a4f6","#c59ef8","#f09ee2"
+];
+
+function preloadImages(opts){
+  const promises = opts.map(o => {
+    return new Promise((res) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => { o._img = img; res(true); };
+      img.onerror = () => { o._img = null; res(false); };
+      img.src = o.img;
+    });
+  });
+  return Promise.all(promises);
+}
+
+function drawWheel(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const len = options.length;
+  const arc = Math.PI*2 / len;
+
+  // draw slices
+  for(let i=0;i<len;i++){
+    const start = angle + i*arc;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,outerR,start,start+arc);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+
+    // inner cutout
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,innerR,start,start+arc,true);
+    ctx.closePath();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    // draw image and label
+    const mid = start + arc/2;
+    ctx.save();
+    ctx.translate(cx + Math.cos(mid)*textRadius*0.6, cy + Math.sin(mid)*textRadius*0.6);
+    ctx.rotate(mid + Math.PI/2); // rotate so text is horizontal-ish
+    // draw small image if loaded
+    const opt = options[i];
+    if(opt._img){
+      const iw = 58, ih = 58;
+      ctx.drawImage(opt._img, -iw/2, -ih/2 - 8, iw, ih);
+    } else {
+      // placeholder box
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(-28,-28-8,56,56);
+    }
+    // label
+    ctx.fillStyle = "#061018";
+    ctx.font = "600 12px Inter,Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(opt.label, 0, 32);
+    ctx.font = "500 11px Inter,Arial";
+    ctx.fillText(opt.price, 0, 46);
+    ctx.restore();
+  }
+
+  // center circle
+  ctx.beginPath();
+  ctx.arc(cx,cy,innerR-6,0,Math.PI*2);
+  ctx.fillStyle = "#061018";
+  ctx.fill();
+
+  // pointer
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - outerR - 6);
+  ctx.lineTo(cx-16, cy - outerR + 18);
+  ctx.lineTo(cx+16, cy - outerR + 18);
+  ctx.closePath();
+  ctx.fillStyle = "#ffd166";
+  ctx.fill();
+
+  // label center
+  ctx.fillStyle = "#fff";
+  ctx.font = "700 14px Inter,Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("SPIN!", cx, cy+6);
+}
+
+function animate(){
+  if(spinning){
+    angularVelocity *= friction;
+    if(Math.abs(angularVelocity) < 0.0005) {
+      angularVelocity = 0;
+      spinning = false;
+      setTimeout(onStop, 300); // small delay before opening link
+    }
+    angle += angularVelocity;
+  }
+  drawWheel();
+  requestAnimationFrame(animate);
+}
+
+function spin(){
+  if(spinning) return;
+  // randomized velocity
+  const power = 0.35 + Math.random()*0.45; // tweak for duration
+  angularVelocity = power * (Math.random() > 0.5 ? 1 : -1);
+  spinning = true;
+  // play simple click sound sequence (if allowed)
+  try{ playSpinSound(); }catch(e){}
+}
+
+function getSelectedIndex(){
+  const len = options.length;
+  const normalized = ((angle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+  const arc = Math.PI*2 / len;
+  // pointer is at angle -Math.PI/2 relative to center; we used pointer at top.
+  const pointerAngle = -Math.PI/2;
+  const relative = (pointerAngle - normalized + Math.PI*2) % (Math.PI*2);
+  return Math.floor(relative / arc);
+}
+
+function onStop(){
+  const idx = getSelectedIndex();
+  const opt = options[idx];
+  if(!opt) return;
+  // flash the selected slice briefly
+  flashSlice(idx);
+  // open link
+  if(opt.url){
+    // open in new tab. Some browsers may block popups unless triggered by user gesture.
+    // To reduce risk of being blocked, we try to open a blank tab right now and then set location after stop:
+    try{
+      const w = window.open('about:blank','_blank');
+      if(w){
+        w.location = opt.url;
+      } else {
+        // fallback
+        window.open(opt.url, '_blank');
+      }
+    } catch(e){
+      window.open(opt.url, '_blank');
+    }
+  }
+}
+
+function flashSlice(idx){
+  const len = options.length;
+  const arc = Math.PI*2 / len;
+  const start = angle + idx*arc;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.arc(cx,cy,outerR,start,start+arc);
+  ctx.closePath();
+  ctx.fillStyle = "rgba(255,255,255,0.15)";
+  ctx.fill();
+  setTimeout(drawWheel, 500);
+}
+
+function buildOptionsList(){
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  options.forEach((o,i)=>{
+    const el = document.createElement('div');
+    el.className = 'opt';
+    el.title = `Click to open: ${o.label}`;
+    el.innerHTML = `
+      <img src="${o.img}" alt="${o.label} thumb" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=64 height=64><rect width=100% height=100% fill=%23ddd/><text x=50% y=50% dominant-baseline=middle text-anchor=middle fill=%23000 font-size=10>IMG</text></svg>'">
+      <div class="meta"><div class="label">${o.label}</div><div class="price">${o.price}</div></div>
+    `;
+    el.addEventListener('click', (e)=>{
+      // stop any spinning and open the link immediately
+      spinning = false;
+      angularVelocity = 0;
+      drawWheel();
+      if(o.url) window.open(o.url, '_blank');
+    });
+    container.appendChild(el);
+  });
+}
+
+function playSpinSound(){
+  // small click / spin audio using WebAudio (optional)
+  const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+  const o = ctxAudio.createOscillator();
+  const g = ctxAudio.createGain();
+  o.type = 'sine';
+  o.frequency.value = 800;
+  g.gain.value = 0.001;
+  o.connect(g);
+  g.connect(ctxAudio.destination);
+  o.start();
+  // ramp up and down
+  g.gain.exponentialRampToValueAtTime(0.04, ctxAudio.currentTime + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 0.18);
+  o.stop(ctxAudio.currentTime + 0.19);
+}
+
+// wire up UI
+document.getElementById('spinBtn').addEventListener('click', ()=>{
+  // browsers tend to block window.open if not user-initiated at the time of result.
+  // We trigger spin in a user gesture, and later try to open a tab. To further reduce blocking,
+  // we can open a blank tab now (user gesture) and later set location. But that is risky/annoying.
+  spin();
+});
+
+canvas.addEventListener('click', (ev)=>{
+  // allow clicking the wheel to open the currently pointed slice
+  if(spinning) return;
+  const idx = getSelectedIndex();
+  if(options[idx] && options[idx].url) window.open(options[idx].url,'_blank');
+});
+
+// init
+preloadImages(options).then(()=> {
+  buildOptionsList();
+  drawWheel();
+  animate();
+});
+
+</script>
 </body>
 </html>
