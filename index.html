@@ -5,43 +5,43 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>YOU STILL OWE ME A GIFT — Gameshow</title>
 <style>
-  :root{
-    --bg:#031021; --card:#0e1724; --accent:#ffd166; --muted:#b6c0cc;
-  }
-  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
-  body{margin:0;min-height:100vh;background:linear-gradient(180deg,#02101a,#071428);color:#eef6ff;display:flex;align-items:center;justify-content:center;padding:20px;}
-  .wrap{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 14px 40px rgba(2,6,23,0.75);}
-  header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-  header h1{margin:0;font-size:20px}
-  .stage{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
-  #stageLeft{flex:0 1 520px;display:flex;flex-direction:column;align-items:center}
-  canvas{border-radius:12px;display:block;box-shadow:0 10px 28px rgba(0,0,0,0.6)}
-  #spinBtn{margin-top:12px;padding:12px 20px;border-radius:10px;border:0;background:var(--accent);color:#031018;font-weight:800;cursor:pointer}
-  #spinBtn:active{transform:translateY(1px)}
-  #lights{width:100%;height:8px;margin-top:12px;display:flex;gap:6px;justify-content:center;align-items:center}
-  .bulb{width:12px;height:12px;border-radius:50%;background:#222}
-  .right{flex:1;min-width:300px}
-  .hostLine{font-weight:700;color:#ffe; margin-bottom:8px}
-  .info{color:var(--muted);font-size:13px;margin-bottom:10px}
-  .options{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-  .option{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);transition:transform .12s}
-  .option:hover{transform:translateY(-6px)}
-  .option img{width:56px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0}
-  .optMeta{display:flex;flex-direction:column}
-  .optTitle{font-weight:700;font-size:13px}
-  .optPrice{color:var(--muted);font-size:12px}
-  .badge{font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);margin-left:6px}
-  .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.95);min-width:320px;background:#071428;border-radius:12px;padding:18px;box-shadow:0 26px 80px rgba(2,6,23,0.9);z-index:60;display:none;align-items:center;gap:12px;}
-  .modal.show{display:flex;flex-direction:column;animation:pop .28s cubic-bezier(.2,.9,.2,1) forwards}
-  @keyframes pop{from{opacity:0;transform:translate(-50%,-50%) scale(.92)} to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-  .modal img{width:160px;height:120px;object-fit:cover;border-radius:8px}
-  .modal h2{margin:0;font-size:18px}
-  .row{display:flex;gap:10px;align-items:center}
-  .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
-  .btn.primary{background:var(--accent);color:#071018;font-weight:800}
-  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-  footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
-  @media(max-width:900px){.stage{flex-direction:column;align-items:center} #stageLeft{width:100%} .right{width:100%}}
+:root{
+  --bg:#031021; --card:#0e1724; --accent:#ffd166; --muted:#b6c0cc;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,#02101a,#071428);color:#eef6ff;display:flex;align-items:center;justify-content:center;padding:20px;}
+.wrap{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 14px 40px rgba(2,6,23,0.75);}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+header h1{margin:0;font-size:20px}
+.stage{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+#stageLeft{flex:0 1 520px;display:flex;flex-direction:column;align-items:center}
+canvas{border-radius:12px;display:block;box-shadow:0 10px 28px rgba(0,0,0,0.6)}
+#spinBtn{margin-top:12px;padding:12px 20px;border-radius:10px;border:0;background:var(--accent);color:#031018;font-weight:800;cursor:pointer}
+#spinBtn:active{transform:translateY(1px)}
+#lights{width:100%;height:8px;margin-top:12px;display:flex;gap:6px;justify-content:center;align-items:center}
+.bulb{width:12px;height:12px;border-radius:50%;background:#222}
+.right{flex:1;min-width:300px}
+.hostLine{font-weight:700;color:#ffe; margin-bottom:8px}
+.info{color:var(--muted);font-size:13px;margin-bottom:10px}
+.options{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.option{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center;cursor:pointer;border:1px solid rgba(255,255,255,0.02);transition:transform .12s}
+.option:hover{transform:translateY(-6px)}
+.option img{width:56px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.optMeta{display:flex;flex-direction:column}
+.optTitle{font-weight:700;font-size:13px}
+.optPrice{color:var(--muted);font-size:12px}
+.badge{font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);margin-left:6px}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.95);min-width:320px;background:#071428;border-radius:12px;padding:18px;box-shadow:0 26px 80px rgba(2,6,23,0.9);z-index:60;display:none;align-items:center;gap:12px;}
+.modal.show{display:flex;flex-direction:column;animation:pop .28s cubic-bezier(.2,.9,.2,1) forwards}
+@keyframes pop{from{opacity:0;transform:translate(-50%,-50%) scale(.92)} to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.modal img{width:160px;height:120px;object-fit:cover;border-radius:8px}
+.modal h2{margin:0;font-size:18px}
+.row{display:flex;gap:10px;align-items:center}
+.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+.btn.primary{background:var(--accent);color:#071018;font-weight:800}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:900px){.stage{flex-direction:column;align-items:center} #stageLeft{width:100%} .right{width:100%}}
 </style>
 </head>
 <body>
@@ -76,6 +76,7 @@
        data-date="2025-11-30 18:57">
        Sales End!
     </a>
+    <script src="https://cdn.logwork.com/widget/countdown.js" defer></script>
   </footer>
 </div>
 
@@ -94,7 +95,6 @@
   </div>
 </div>
 
-<script src="https://cdn.logwork.com/widget/countdown.js" defer></script>
 <script>
 const options = [
   { label: "Baobab – Bronco Brown", price: "$199.99", img: "assets/baobab.jpg", url: "https://jimgreenfootwear.com/store/baobab-boot-bronco/?attribute_pa_size=12", value:199.99 },
@@ -115,15 +115,43 @@ const innerR = 54;
 let angle = 0;
 let angularVelocity = 0;
 let spinning = false;
-const friction = 0.97; // faster stop
+const friction = 0.985; // slightly faster stop
 const colors = ["#c0392b","#e67e22","#f1c40f","#2ecc71","#1abc9c","#3498db","#9b59b6","#e84393"];
-const images = [];
 
+const images = [];
 options.forEach((o,i)=>{
   images[i] = new Image();
   images[i].src = o.img;
 });
 
+// --- Audio setup ---
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+
+function playDing(){
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  osc.start();
+  osc.frequency.exponentialRampToValueAtTime(660, audioCtx.currentTime + 0.25);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+  osc.stop(audioCtx.currentTime + 0.3);
+}
+
+function speakHostLine(text){
+  if('speechSynthesis' in window){
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang='en-US';
+    msg.rate=1;
+    msg.pitch=1.1;
+    window.speechSynthesis.speak(msg);
+  }
+}
+
+// --- Wheel ---
 function drawWheel(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const len = options.length;
@@ -156,7 +184,6 @@ function drawWheel(){
     ctx.drawImage(images[i], -28, -28, 56, 56);
     ctx.restore();
   }
-
   ctx.beginPath(); ctx.arc(cx,cy,innerR-8,0,Math.PI*2); ctx.fillStyle="#031018"; ctx.fill();
   ctx.beginPath(); ctx.moveTo(cx, cy - outerR - 6); ctx.lineTo(cx-16, cy - outerR + 18); ctx.lineTo(cx+16, cy - outerR + 18); ctx.closePath(); ctx.fillStyle = "#ffd166"; ctx.fill();
 }
@@ -164,32 +191,23 @@ function drawWheel(){
 function animate(){
   if(spinning){
     angularVelocity *= friction;
-    if(Math.abs(angularVelocity)<0.002){ angularVelocity=0; spinning=false; setTimeout(onStop,200);}
+    if(Math.abs(angularVelocity)<0.001){ 
+      angularVelocity=0; 
+      spinning=false; 
+      setTimeout(onStop,300);
+    }
     angle += angularVelocity;
   }
   drawWheel();
   requestAnimationFrame(animate);
 }
 
-// Audio
-let audioCtx, oscillator;
-function playAudio(){
-  if(!audioCtx){
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    oscillator = audioCtx.createOscillator();
-    oscillator.type='square';
-    oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-    oscillator.connect(audioCtx.destination);
-    oscillator.start();
-    setTimeout(()=>oscillator.stop(), 400);
-  }
-}
-
 function spin(){
   if(spinning) return;
-  playAudio();
+  playDing();
+  speakHostLine("Alright, here we go!");
   angularVelocity = (0.3 + Math.random()*0.4) * (Math.random()>0.5?1:-1);
-  spinning = true;
+  spinning=true;
 }
 
 function getSelectedIndex(){
@@ -219,9 +237,10 @@ function flashSlice(idx){
   ctx.closePath();
   ctx.fillStyle="rgba(255,255,255,0.14)";
   ctx.fill();
-  setTimeout(drawWheel,400);
+  setTimeout(drawWheel,500);
 }
 
+// --- Options UI ---
 const optionsEl=document.getElementById('options');
 function buildOptionsUI(){
   optionsEl.innerHTML='';
@@ -254,12 +273,10 @@ function announceWinner(opt){
   showTip("Roast: Better luck next time, cheapskate!");
   modal.classList.add('show');
   document.getElementById('buyBtn').onclick=()=>window.open(opt.url,'_blank');
-  document.getElementById('spinAgainBtn').onclick=()=>{
-    modal.classList.remove('show'); 
-    spin();
-  };
+  document.getElementById('spinAgainBtn').onclick=()=>{modal.classList.remove('show'); spin();};
 }
 
+// --- Lights ---
 function startLights(){
   const lights=document.getElementById('lights');
   lights.innerHTML='';
@@ -274,14 +291,9 @@ function startLights(){
   },420);
 }
 
+// --- Event listeners ---
 document.getElementById('spinBtn').addEventListener('click',()=>{ spin(); });
-canvas.addEventListener('click',()=>{ 
-  if(!spinning){ 
-    const idx=getSelectedIndex(); 
-    const o=options[idx]; 
-    if(o && o.url) window.open(o.url,'_blank'); 
-  }
-});
+canvas.addEventListener('click',()=>{ if(!spinning){ const idx=getSelectedIndex(); const o=options[idx]; if(o && o.url) window.open(o.url,'_blank'); }});
 
 animate();
 buildOptionsUI();
